@@ -27,6 +27,8 @@ body {
   background: #181825;
 }
 
+#messages { overflow: hidden; }
+
 .message { margin-bottom: 16px; }
 
 .message.user {
