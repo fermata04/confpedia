@@ -22,19 +22,25 @@ func SearchHandler(c *gin.Context) {
 	results, err := search.Search(query)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"results": []interface{}{},
-			"message": err.Error(),
+			"results":  []interface{}{},
+			"commands": nil,
+			"message":  err.Error(),
 		})
 		return
 	}
 
 	if len(results) == 0 {
 		c.JSON(http.StatusOK, gin.H{
-			"results": []interface{}{},
-			"message": "結果が見つかりませんでした",
+			"results":  []interface{}{},
+			"commands": nil,
+			"message":  "結果が見つかりませんでした",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"results": results})
+	commands, _ := search.Summarize(req.Query, results)
+	c.JSON(http.StatusOK, gin.H{
+		"results":  results,
+		"commands": commands,
+	})
 }
