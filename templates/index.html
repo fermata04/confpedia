@@ -2,9 +2,76 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>infra-search</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <h1>infra-search</h1>
+  <div id="app">
+    <div id="chat-window">
+      <div id="messages"></div>
+    </div>
+    <form id="search-form">
+      <input id="query-input" type="text" placeholder="例: CiscoでBGPを設定したい" autocomplete="off">
+      <button type="submit">検索</button>
+    </form>
+  </div>
+
+  <script>
+    const messages = [];
+
+    function appendMessage(role, content) {
+      messages.push({ role, content });
+      render();
+    }
+
+    function render() {
+      const container = document.getElementById('messages');
+      container.innerHTML = messages.map(m => {
+        if (m.role === 'user') {
+          return `<div class="message user">${escapeHtml(m.content)}</div>`;
+        }
+        const cards = m.content.map(r =>
+          `<div class="card">
+            <a href="${escapeHtml(r.url)}" target="_blank">${escapeHtml(r.title)}</a>
+            <span class="source">${escapeHtml(r.source)}</span>
+            <p>${escapeHtml(r.snippet)}</p>
+           </div>`
+        ).join('');
+        return `<div class="message bot">${cards || '結果が見つかりませんでした'}</div>`;
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    document.getElementById('search-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('query-input');
+      const query = input.value.trim();
+      if (!query) return;
+
+      appendMessage('user', query);
+      input.value = '';
+
+      try {
+        const res = await fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+        const data = await res.json();
+        appendMessage('bot', data.results || []);
+      } catch (err) {
+        appendMessage('bot', [{ title: 'エラー', url: '#', snippet: err.message, source: '' }]);
+      }
+    });
+  </script>
 </body>
 </html>
