@@ -4,15 +4,19 @@ import (
 	"strings"
 )
 
-// ベンダーキーワード → site: 指定のマッピング
-var vendorSiteMap = map[string]string{
-	"cisco":   "site:cisco.com OR site:community.cisco.com",
-	"juniper": "site:juniper.net",
-	"arista":  "site:arista.com",
-	"aws":     "site:docs.aws.amazon.com",
-	"azure":   "site:learn.microsoft.com",
-	"linux":   "",
-	"windows": "site:learn.microsoft.com",
+// vendorRules はベンダーキーワードと site: フィルタの優先順位付きリスト。
+// マップではなくスライスを使うことで検出順序を決定論的にしている。
+var vendorRules = []struct {
+	keyword string
+	site    string
+}{
+	{"cisco", "site:cisco.com OR site:community.cisco.com"},
+	{"juniper", "site:juniper.net"},
+	{"arista", "site:arista.com"},
+	{"aws", "site:docs.aws.amazon.com"},
+	{"azure", "site:learn.microsoft.com"},
+	{"windows", "site:learn.microsoft.com"},
+	{"linux", ""},
 }
 
 // 日本語意図キーワード → 英語の追加クエリ語
@@ -31,11 +35,11 @@ var intentMap = map[string]string{
 func BuildQuery(input string) string {
 	lower := strings.ToLower(input)
 
-	// ベンダー検出
+	// ベンダー検出（優先順位順に最初にマッチしたものを使用）
 	siteFilter := ""
-	for vendor, site := range vendorSiteMap {
-		if strings.Contains(lower, vendor) {
-			siteFilter = site
+	for _, rule := range vendorRules {
+		if strings.Contains(lower, rule.keyword) {
+			siteFilter = rule.site
 			break
 		}
 	}
