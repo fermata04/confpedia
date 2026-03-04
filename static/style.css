@@ -1,6 +1,7 @@
 :root {
   --mauve:    #cba6f7;
   --subtext0: #a6adc8;
+  --green:    #a6e3a1;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -190,4 +191,16 @@ button:hover { background: #74c7ec; }
   font-size: 0.85em;
   color: var(--subtext0);
   font-style: italic;
+}
+
+.command-params {
+  margin: 4px 0 0 16px;
+  padding: 0;
+  list-style: circle;
+  font-size: 0.85em;
+  color: var(--green, #a6e3a1);
+}
+
+.command-params li {
+  margin: 2px 0;
 }

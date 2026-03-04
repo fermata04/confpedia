@@ -42,14 +42,14 @@
                   ? `<div class="command-purpose">${escapeHtml(cmd.purpose)}</div>`
                   : '';
                 const paramsHtml = (cmd.params && cmd.params.length > 0)
-                  ? `<ul class="command-options">${cmd.params.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>`
+                  ? `<ul class="command-params">${cmd.params.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>`
                   : '';
                 const optionsHtml = (cmd.options && cmd.options.length > 0)
                   ? `<ul class="command-options">${cmd.options.map(o => `<li>${escapeHtml(o)}</li>`).join('')}</ul>`
                   : '';
                 return `<div class="command-item">
                   <div class="command-line">
-                    <span class="command-step">${cmd.step}.</span>
+                    <span class="command-step">${escapeHtml(String(cmd.step))}.</span>
                     ${prefix}
                     <code>${escapeHtml(cmd.command)}</code>
                     <button class="copy-btn" data-cmd="${escapeHtml(cmd.command)}">コピー</button>
