@@ -12,8 +12,11 @@ import (
 
 type CommandItem struct {
 	Step        int      `json:"step"`
+	Prompt      string   `json:"prompt"`
 	Command     string   `json:"command"`
 	Description string   `json:"description"`
+	Purpose     string   `json:"purpose"`
+	Params      []string `json:"params"`
 	Options     []string `json:"options"`
 }
 
@@ -62,9 +65,17 @@ func Summarize(query string, results []SearchResult) ([]CommandItem, error) {
 	systemPrompt := `あなたはインフラエンジニア向けのアシスタントです。
 与えられた検索結果から、実際にターミナルで使えるコマンドを抽出してください。
 必ず以下のJSON形式のみを返してください。説明文や前置きは不要です。
-step は実行順序（1から連番）、options は主要なオプションの説明を配列で記載してください。
 
-{"commands": [{"step": 1, "command": "実際のコマンド", "description": "このコマンドの目的を1行で", "options": ["-x: オプションの説明"]}]}`
+フィールドの説明:
+- step: 実行順序（1から連番）
+- prompt: CLIプロンプト（Cisco等の対話型コマンドの場合のみ。例: "Router#", "Router(config-if)#"。Linuxコマンドは空文字列）
+- command: 実行するコマンド
+- description: このコマンドの目的を1行で
+- purpose: なぜこのコマンドが必要か1〜2文で説明
+- params: コマンド内の具体的なパラメータ値の意味（例: ["192.168.1.1: ルーターのIPアドレス"]）。パラメータがない場合は空配列
+- options: 主要なオプションフラグの説明（例: ["-t: 構文チェックのみ実行"]）。ない場合は空配列
+
+{"commands": [{"step": 1, "prompt": "", "command": "コマンド", "description": "目的を1行で", "purpose": "なぜ必要か1〜2文", "params": ["値: 説明"], "options": ["-x: 説明"]}]}`
 
 	reqBody := ollamaRequest{
 		Model: model,
