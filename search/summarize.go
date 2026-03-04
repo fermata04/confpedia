@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 )
 
 type CommandItem struct {
@@ -38,7 +37,7 @@ type ollamaResponse struct {
 	} `json:"message"`
 }
 
-var ollamaClient = &http.Client{Timeout: 120 * time.Second}
+var ollamaClient = &http.Client{Timeout: 0}
 
 // Summarize は検索結果スニペットを Ollama に渡し、
 // コマンド＋説明のリストを返す。
