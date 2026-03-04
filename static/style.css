@@ -148,3 +148,21 @@ button:hover { background: #74c7ec; }
   margin-top: 3px;
   padding-left: 4px;
 }
+
+.command-step {
+  font-weight: bold;
+  margin-right: 4px;
+  color: var(--mauve);
+}
+
+.command-options {
+  margin: 4px 0 0 16px;
+  padding: 0;
+  list-style: disc;
+  font-size: 0.85em;
+  color: var(--subtext0);
+}
+
+.command-options li {
+  margin: 2px 0;
+}

@@ -37,10 +37,14 @@
               ${m.commands.map(cmd =>
                 `<div class="command-item">
                   <div class="command-line">
+                    <span class="command-step">${cmd.step}.</span>
                     <code>$ ${escapeHtml(cmd.command)}</code>
                     <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(cmd.command)}')">コピー</button>
                   </div>
                   <div class="command-desc">${escapeHtml(cmd.description)}</div>
+                  ${cmd.options && cmd.options.length > 0
+                    ? `<ul class="command-options">${cmd.options.map(o => `<li>${escapeHtml(o)}</li>`).join('')}</ul>`
+                    : ''}
                 </div>`
               ).join('')}
             </div>`
