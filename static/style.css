@@ -171,3 +171,23 @@ button:hover { background: #74c7ec; }
 .command-options li {
   margin: 2px 0;
 }
+
+.command-prefix {
+  font-family: monospace;
+  color: var(--subtext0);
+  margin-right: 4px;
+}
+
+.command-prompt {
+  font-family: monospace;
+  color: var(--green, #a6e3a1);
+  margin-right: 6px;
+  font-size: 0.9em;
+}
+
+.command-purpose {
+  margin: 4px 0 2px 16px;
+  font-size: 0.85em;
+  color: var(--subtext0);
+  font-style: italic;
+}
